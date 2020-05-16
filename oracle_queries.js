@@ -15,7 +15,7 @@ class queries {
     constructor(config) {
         this.config = config;
     }
-    query(nconsulta) {
+    query(nconsulta, usuario = "", contrasena = "") {
         return __awaiter(this, void 0, void 0, function* () {
             let conn;
             let query = "";
@@ -138,6 +138,12 @@ class queries {
                         "on A.FECHA_PROCESO = B.FECHA_PROCESO " +
                         ")";
                     break;
+                case "usuarios":
+                    query = `SELECT * FROM USUARIOS WHERE usuario='${usuario}' AND pass='${contrasena}'`;
+                    break;
+                case "autenticar":
+                    query = `SELECT usuario, pass FROM USUARIOS WHERE usuario='${usuario}' AND pass='${contrasena}'`;
+                    break;
                 default:
                     console.log("El parametro introducido en la función query del objeto queries no esta en ninguna de las opciones en el switch/case");
                     break;
@@ -145,6 +151,11 @@ class queries {
             try {
                 conn = yield oracl.getConnection(this.config);
                 const result = yield conn.execute(query);
+                // let datos:any={};
+                // datos=result.rows;
+                // console.log(datos[0].DES);
+                //console.log(result);
+                //console.log(result);
                 return result.rows;
                 //console.log(result);
             }

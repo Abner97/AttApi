@@ -1,6 +1,8 @@
 
 const oracl = require('oracledb');
+
 oracl.outFormat = oracl.OUT_FORMAT_OBJECT;
+
 
 export class queries{
 
@@ -9,7 +11,7 @@ export class queries{
     
     }
 
-    async query(nconsulta:string):Promise<string>{ //resuelve las queries para cada caso
+    async query(nconsulta:string,usuario:string="",contrasena:string=""):Promise<string>{ //resuelve las queries para cada caso
         let conn:any;
         let query:string="";
 
@@ -136,6 +138,13 @@ export class queries{
                         "on A.FECHA_PROCESO = B.FECHA_PROCESO "+
                     ")"
                     break;
+                case "usuarios":
+                    query=`SELECT * FROM USUARIOS WHERE usuario='${usuario}' AND pass='${contrasena}'`;
+                    break;
+                
+                case "autenticar":
+                    query=`SELECT usuario, pass FROM USUARIOS WHERE usuario='${usuario}' AND pass='${contrasena}'`;
+                    break;
             
             default:
                 console.log("El parametro introducido en la función query del objeto queries no esta en ninguna de las opciones en el switch/case");
@@ -148,6 +157,11 @@ export class queries{
         try {
             conn = await oracl.getConnection(this.config);
             const result= await conn.execute(query);
+            // let datos:any={};
+            // datos=result.rows;
+            // console.log(datos[0].DES);
+            //console.log(result);
+            //console.log(result);
             return result.rows;
 
            //console.log(result);
@@ -160,6 +174,27 @@ export class queries{
             }
         }
     }
+
+    // async autenticar(usuario:string,contrasena:string){
+    //     let conn:any;
+    //     let query:string="";
+    //     let array:string[];
+        
+    //     try {
+    //         conn = await oracl.getConnection(this.config);
+    //         const result= await conn.execute(query);
+    //         array[0]= result.row;
+
+    //        //console.log(result);
+    //     } catch (err) {
+    //         return (err)
+    //     } finally {
+           
+    //         if (conn) { // conn assignment worked, need to close
+    //             await conn.close()
+    //         }
+    //     }
+    // }
 
 
 }
