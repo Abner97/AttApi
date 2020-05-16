@@ -145,7 +145,7 @@ class queries {
             try {
                 conn = yield oracl.getConnection(this.config);
                 const result = yield conn.execute(query);
-                return JSON.stringify(result.rows);
+                return result.rows;
                 //console.log(result);
             }
             catch (err) {

@@ -148,7 +148,7 @@ export class queries{
         try {
             conn = await oracl.getConnection(this.config);
             const result= await conn.execute(query);
-            return JSON.stringify(result.rows);
+            return result.rows;
 
            //console.log(result);
         } catch (err) {

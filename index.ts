@@ -1,6 +1,8 @@
 import { queries } from './oracle_queries';
 
 const express = require('express');
+const bodyParser = require('body-parser');
+const jwt = require('jsonwebtoken');
 const app = express();
 
 const config = {
@@ -12,6 +14,8 @@ const config = {
 
 const q = new queries(config);
 
+// app.use(bodyParser.urlencoded({extended:true}));
+// app.use(bodyParser.json());
 
 
 app.get('/portabilidad_gral',(req:any,res:any)=>{ //endpoint para portabilidad general
@@ -43,6 +47,8 @@ app.get('/portabilidad_operador_in',(req:any,res:any)=>{
         res.send(await q.query("portabilidad_operador_in"));
      })()
 });
+
+
 
 
 //PORT

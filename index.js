@@ -11,6 +11,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const oracle_queries_1 = require("./oracle_queries");
 const express = require('express');
+const bodyParser = require('body-parser');
+const jwt = require('jsonwebtoken');
 const app = express();
 const config = {
     user: 'att',
@@ -18,6 +20,8 @@ const config = {
     connectString: 'localhost:1521/ORCLCDB.localdomain'
 };
 const q = new oracle_queries_1.queries(config);
+// app.use(bodyParser.urlencoded({extended:true}));
+// app.use(bodyParser.json());
 app.get('/portabilidad_gral', (req, res) => {
     (() => __awaiter(void 0, void 0, void 0, function* () {
         res.send(yield q.query("portabilidad_gral"));
