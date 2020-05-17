@@ -15,42 +15,62 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 const app = express();
+const rutasProtegidas = express.Router(); //middleware 
+rutasProtegidas.use((req, res, next) => {
+    const token = req.headers['access-token'];
+    if (token) {
+        jwt.verify(token, app.get('llave'), (err, decoded) => {
+            if (err) {
+                return res.json({ mensaje: 'Token inválida' });
+            }
+            else {
+                req.decoded = decoded;
+                next();
+            }
+        });
+    }
+    else {
+        res.send({
+            mensaje: 'Token no proveída.'
+        });
+    }
+});
 const config = {
     user: 'att',
     password: 'att',
     connectString: 'localhost:1521/ORCLCDB.localdomain'
 };
-const q = new oracle_queries_1.queries(config);
+const q = new oracle_queries_1.queries(config); //creacion del objeto queries que da acceso a la base datos para poder hacer consultas (oracle_queries.ts/js)
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.set('llave', llave.llave);
 let datos = {};
-app.get('/portabilidad_gral', (req, res) => {
+app.get('/portabilidad_gral', rutasProtegidas, (req, res) => {
     (() => __awaiter(void 0, void 0, void 0, function* () {
         res.send(yield q.query("portabilidad_gral"));
     }))();
 });
-app.get('/portabilidad_origen_out', (req, res) => {
+app.get('/portabilidad_origen_out', rutasProtegidas, (req, res) => {
     (() => __awaiter(void 0, void 0, void 0, function* () {
         res.send(yield q.query("portabilidad_origen_out"));
     }))();
 });
-app.get('/portabilidad_lineal_origen_out', (req, res) => {
+app.get('/portabilidad_lineal_origen_out', rutasProtegidas, (req, res) => {
     (() => __awaiter(void 0, void 0, void 0, function* () {
         res.send(yield q.query("portabilidad_lineal_origen_out"));
     }))();
 });
-app.get('/portabilidad_operador_out', (req, res) => {
+app.get('/portabilidad_operador_out', rutasProtegidas, (req, res) => {
     (() => __awaiter(void 0, void 0, void 0, function* () {
         res.send(yield q.query("portabilidad_operador_out"));
     }))();
 });
-app.get('/portabilidad_operador_in', (req, res) => {
+app.get('/portabilidad_operador_in', rutasProtegidas, (req, res) => {
     (() => __awaiter(void 0, void 0, void 0, function* () {
         res.send(yield q.query("portabilidad_operador_in"));
     }))();
 });
-app.get('/usuarios', (req, res) => {
+app.get('/usuarios', rutasProtegidas, (req, res) => {
     console.log(req.body.user);
     (() => __awaiter(void 0, void 0, void 0, function* () {
         datos = yield q.query("usuarios", req.body.user, req.body.password);
@@ -83,6 +103,11 @@ app.post('/autenticar', (req, res) => {
         catch (err) {
             res.json({ mensaje: "Usuario o contraseña incorrectos" });
         }
+    }))();
+});
+app.post('/registrar', (req, res) => {
+    (() => __awaiter(void 0, void 0, void 0, function* () {
+        res.json(yield q.Registrar(req.body.name, req.body.lastName, req.body.email, req.body.user, req.body.password));
     }))();
 });
 //PORT

@@ -10,12 +10,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const oracl = require('oracledb');
+const bcrypt = require('bcrypt');
 oracl.outFormat = oracl.OUT_FORMAT_OBJECT;
 class queries {
     constructor(config) {
         this.config = config;
     }
-    query(nconsulta, usuario = "", contrasena = "") {
+    query(nconsulta, nombre = "", lastName = "", usuario = "", contrasena = "") {
         return __awaiter(this, void 0, void 0, function* () {
             let conn;
             let query = "";
@@ -161,6 +162,39 @@ class queries {
             }
             catch (err) {
                 return (err);
+            }
+            finally {
+                if (conn) { // conn assignment worked, need to close
+                    yield conn.close();
+                }
+            }
+        });
+    }
+    ValidarUsuario() {
+        return __awaiter(this, void 0, void 0, function* () {
+        });
+    }
+    Registrar(primerNombre, apellido, email, user, password) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let conn;
+            const hashedPassword = yield new Promise((resolve, reject) => {
+                console.log("entre");
+                bcrypt.hash(password, 10, function (err, hash) {
+                    if (err)
+                        reject(err);
+                    resolve(hash);
+                });
+            });
+            try {
+                console.log(hashedPassword);
+                conn = yield oracl.getConnection(this.config);
+                const result = yield conn.execute(`BEGIN 
+                                                insertUSER('${primerNombre}','${apellido}','${email}','${user}','${hashedPassword}'); 
+                                              END;`);
+                return "Registro Exitoso!";
+            }
+            catch (err) {
+                return (err + "Error al guardar en la base de datos");
             }
             finally {
                 if (conn) { // conn assignment worked, need to close

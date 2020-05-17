@@ -6,14 +6,36 @@ const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 const app = express();
 
-const config = {
+
+const rutasProtegidas = express.Router(); //middleware 
+rutasProtegidas.use((req:any, res:any, next:any) => {
+    const token = req.headers['access-token'];
+ 
+    if (token) {
+      jwt.verify(token, app.get('llave'), (err:any, decoded:any) => {      
+        if (err) {
+          return res.json({ mensaje: 'Token inválida' });    
+        } else {
+          req.decoded = decoded;    
+          next();
+        }
+      });
+    } else {
+      res.send({ 
+          mensaje: 'Token no proveída.' 
+      });
+    }
+ });
+
+
+const config = {//datos de acceso a la DB
     user: 'att',
     password: 'att',
     connectString: 'localhost:1521/ORCLCDB.localdomain'
 }
 
 
-const q = new queries(config);
+const q = new queries(config);//creacion del objeto queries que da acceso a la base datos para poder hacer consultas (oracle_queries.ts/js)
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -21,36 +43,36 @@ app.set('llave',llave.llave);
 
 let datos: any = {};
 
-app.get('/portabilidad_gral', (req: any, res: any) => { //endpoint para portabilidad general
+app.get('/portabilidad_gral',rutasProtegidas, (req: any, res: any) => { //endpoint para portabilidad general
     (async () => {
         res.send(await q.query("portabilidad_gral"));
     })()
 });
 
-app.get('/portabilidad_origen_out', (req: any, res: any) => { //endpoint para 
+app.get('/portabilidad_origen_out',rutasProtegidas, (req: any, res: any) => { //endpoint para 
     (async () => {
         res.send(await q.query("portabilidad_origen_out"));
     })()
 });
 
-app.get('/portabilidad_lineal_origen_out', (req: any, res: any) => {
+app.get('/portabilidad_lineal_origen_out',rutasProtegidas, (req: any, res: any) => {
     (async () => {
         res.send(await q.query("portabilidad_lineal_origen_out"));
     })()
 });
 
-app.get('/portabilidad_operador_out', (req: any, res: any) => {
+app.get('/portabilidad_operador_out',rutasProtegidas, (req: any, res: any) => {
     (async () => {
         res.send(await q.query("portabilidad_operador_out"));
     })()
 });
 
-app.get('/portabilidad_operador_in', (req: any, res: any) => {
+app.get('/portabilidad_operador_in',rutasProtegidas, (req: any, res: any) => {
     (async () => {
         res.send(await q.query("portabilidad_operador_in"));
     })()
 });
-app.get('/usuarios', (req: any, res: any) => {
+app.get('/usuarios',rutasProtegidas, (req: any, res: any) => {
     
     console.log(req.body.user);
 
@@ -94,7 +116,13 @@ app.post('/autenticar', (req: any, res: any) => {
    
     })()
    
-})
+});
+
+app.post('/registrar',(req:any,res:any)=>{
+    (async () => {
+        res.json(await q.Registrar(req.body.name,req.body.lastName,req.body.email, req.body.user, req.body.password));
+    })()
+});
 
 
 
