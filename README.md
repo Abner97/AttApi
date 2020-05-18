@@ -20,3 +20,15 @@ apiattsmc.eastus.cloudapp.azure.com:3000/portabilidad_operador_out
 ## Portabilidad_operador_in
 apiattsmc.eastus.cloudapp.azure.com:3000/portabilidad_operador_in
 
+## Registro
+apiattsmc.eastus.cloudapp.azure.com:3000/resgistro
+
+### Key      ### Value
+name         <nombre>
+lastName     <apellido>
+email        <correo>
+user         <usuario>
+password     <constraseña>
+
+
+
