@@ -31,4 +31,10 @@ user         <usuario>
 password     <constraseña>
 
 
+## Autenticar Usuarios
+apiattsmc.eastus.cloudapp.azure.com:3000/autenticar
+user  
+password
+
+
 
