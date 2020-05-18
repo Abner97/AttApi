@@ -16,7 +16,7 @@ class queries {
     constructor(config) {
         this.config = config;
     }
-    query(nconsulta, nombre = "", lastName = "", usuario = "", contrasena = "") {
+    query(nconsulta, nombre = "", lastName = "", email = "", usuario = "", contrasena = "") {
         return __awaiter(this, void 0, void 0, function* () {
             let conn;
             let query = "";
@@ -143,7 +143,7 @@ class queries {
                     query = `SELECT * FROM USUARIOS WHERE usuario='${usuario}' AND pass='${contrasena}'`;
                     break;
                 case "autenticar":
-                    query = `SELECT usuario, pass FROM USUARIOS WHERE usuario='${usuario}' AND pass='${contrasena}'`;
+                    query = `SELECT usuario, pass FROM USUARIOS WHERE usuario='${usuario}'`;
                     break;
                 default:
                     console.log("El parametro introducido en la función query del objeto queries no esta en ninguna de las opciones en el switch/case");
@@ -151,14 +151,8 @@ class queries {
             }
             try {
                 conn = yield oracl.getConnection(this.config);
-                const result = yield conn.execute(query);
-                // let datos:any={};
-                // datos=result.rows;
-                // console.log(datos[0].DES);
-                //console.log(result);
-                //console.log(result);
+                const result = yield conn.execute(query); //ejecuta el query devuelto por el switch/case
                 return result.rows;
-                //console.log(result);
             }
             catch (err) {
                 return (err);
@@ -170,34 +164,51 @@ class queries {
             }
         });
     }
-    ValidarUsuario() {
+    validarPassword(password, hash) {
         return __awaiter(this, void 0, void 0, function* () {
+            const response = yield new Promise((resolve, reject) => {
+                bcrypt.compare(password, hash, function (err, result) {
+                    if (err)
+                        reject(err);
+                    resolve(result);
+                });
+            });
+            return response; //Devuelve true o false, si es true la constraseña en correcta, si no es true es incorrecta
         });
     }
     Registrar(primerNombre, apellido, email, user, password) {
         return __awaiter(this, void 0, void 0, function* () {
             let conn;
-            const hashedPassword = yield new Promise((resolve, reject) => {
-                console.log("entre");
-                bcrypt.hash(password, 10, function (err, hash) {
-                    if (err)
-                        reject(err);
-                    resolve(hash);
-                });
-            });
             try {
-                console.log(hashedPassword);
+                let proceed = false;
                 conn = yield oracl.getConnection(this.config);
-                const result = yield conn.execute(`BEGIN 
+                const verificarUser = yield conn.execute(`SELECT usuario FROM USUARIOS WHERE usuario='${user}'`);
+                const verificarEmail = yield conn.execute(`SELECT email FROM USUARIOS WHERE email='${email}'`);
+                if (verificarUser.rows[0] != undefined) { //verifica que no exista el usuario en la BD.
+                    return { user: "Exist" };
+                }
+                else if (verificarEmail.rows[0] != undefined) { //verifica que no exista el email en la BD.
+                    return { email: "Exist" };
+                }
+                else { //si ninguno de los 2 existe entonces procede a registrar en usuario en la BD.
+                    const hashedPassword = yield new Promise((resolve, reject) => {
+                        bcrypt.hash(password, 10, function (err, hash) {
+                            if (err)
+                                reject(err);
+                            resolve(hash);
+                        });
+                    });
+                    const result = yield conn.execute(`BEGIN 
                                                 insertUSER('${primerNombre}','${apellido}','${email}','${user}','${hashedPassword}'); 
                                               END;`);
-                return "Registro Exitoso!";
+                    return { mensaje: "Registro Exitoso!" };
+                }
             }
             catch (err) {
-                return (err + "Error al guardar en la base de datos");
+                return (err + "Error al guardar en la base de datos"); //Hubo un error al insertar la información en la BD.
             }
             finally {
-                if (conn) { // conn assignment worked, need to close
+                if (conn) { // Todo salio bien, así que se procede a cerrar la conexión.
                     yield conn.close();
                 }
             }

@@ -79,12 +79,13 @@ app.get('/usuarios', rutasProtegidas, (req, res) => {
     }))();
 });
 app.post('/autenticar', (req, res) => {
+    const plainPassword = req.body.password;
+    const user = req.body.user;
     (() => __awaiter(void 0, void 0, void 0, function* () {
-        datos = yield q.query("autenticar", req.body.user, req.body.password);
-        // console.log(datos[0].USUARIO);
-        //console.log(datos[0].USUARIO);
         try {
-            if (req.body.user === datos[0].USUARIO && req.body.password === datos[0].PASS) {
+            datos = yield q.query("autenticar", null, null, null, user, null);
+            const passwordValidated = yield q.validarPassword(plainPassword, datos[0].PASS);
+            if (user === datos[0].USUARIO && passwordValidated) {
                 const payload = {
                     check: true
                 };

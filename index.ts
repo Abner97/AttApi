@@ -86,16 +86,18 @@ app.get('/usuarios',rutasProtegidas, (req: any, res: any) => {
 
 
 
-app.post('/autenticar', (req: any, res: any) => {
+app.post('/autenticar', (req: any, res: any) => {//endpoint para autenticar al usuario
 
-
+    const plainPassword=req.body.password;
+    const user = req.body.user;
     (async () => {
-        datos = await q.query("autenticar", req.body.user, req.body.password);
-        // console.log(datos[0].USUARIO);
-         //console.log(datos[0].USUARIO);
 
     try{
-        if (req.body.user === datos[0].USUARIO && req.body.password === datos[0].PASS) {
+
+        datos = await q.query("autenticar",null,null,null, user,null);
+        const passwordValidated = await q.validarPassword(plainPassword,datos[0].PASS);
+
+        if (user === datos[0].USUARIO && passwordValidated) {
             const payload = {
                 check: true
             };
@@ -114,11 +116,11 @@ app.post('/autenticar', (req: any, res: any) => {
         res.json({ mensaje: "Usuario o contraseña incorrectos" });
     }
    
-    })()
+    })();
    
 });
 
-app.post('/registrar',(req:any,res:any)=>{
+app.post('/registrar',(req:any,res:any)=>{//endpoint para registrar al usuario
     (async () => {
         res.json(await q.Registrar(req.body.name,req.body.lastName,req.body.email, req.body.user, req.body.password));
     })()

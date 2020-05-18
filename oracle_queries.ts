@@ -1,3 +1,5 @@
+import { resolve } from "path";
+import { rejects } from "assert";
 
 const oracl = require('oracledb');
 const bcrypt = require('bcrypt');
@@ -12,7 +14,7 @@ export class queries {
 
     }
 
-    async query(nconsulta: string, nombre: string = "", lastName: string = "", usuario: string = "", contrasena: string = ""): Promise<string> { //resuelve las queries para cada caso
+    async query(nconsulta: string, nombre: string | null = "", lastName: string | null = "", email: string | null = "", usuario: string | null = "", contrasena: string | null = ""): Promise<string> { //resuelve las queries para cada caso
         let conn: any;
         let query: string = "";
 
@@ -144,7 +146,7 @@ export class queries {
                 break;
 
             case "autenticar":
-                query = `SELECT usuario, pass FROM USUARIOS WHERE usuario='${usuario}' AND pass='${contrasena}'`;
+                query = `SELECT usuario, pass FROM USUARIOS WHERE usuario='${usuario}'`;
                 break;
 
             default:
@@ -157,15 +159,9 @@ export class queries {
 
         try {
             conn = await oracl.getConnection(this.config);
-            const result = await conn.execute(query);
-            // let datos:any={};
-            // datos=result.rows;
-            // console.log(datos[0].DES);
-            //console.log(result);
-            //console.log(result);
+            const result = await conn.execute(query);//ejecuta el query devuelto por el switch/case
             return result.rows;
 
-            //console.log(result);
         } catch (err) {
             return (err)
         } finally {
@@ -176,36 +172,64 @@ export class queries {
         }
     }
 
-    async ValidarUsuario() {
-        
+    async validarPassword(password: string, hash: string) { //esta función valida que el Hash del password ingresado por el usuario coincida con el Hash del password del usuario que están la BD.
+
+
+        const response = await new Promise((resolve, reject) => {
+            bcrypt.compare(password, hash, function (err: any, result: any) {
+                if (err) reject(err)
+                resolve(result)
+            });
+
+        });
+
+        return response;//Devuelve true o false, si es true la constraseña en correcta, si no es true es incorrecta
+
+
+
     }
 
     async Registrar(primerNombre: string, apellido: string, email: string, user: string, password: string) {
+        
         let conn: any;
-
-
-        const hashedPassword = await new Promise((resolve, reject) => {
-            console.log("entre");
-            bcrypt.hash(password, 10, function (err: any, hash: any) {
-                if (err) reject(err)
-                resolve(hash)
-            });
-        });
 
         try {
 
-            console.log(hashedPassword);
+            let proceed=false;
             conn = await oracl.getConnection(this.config);
-            const result = await conn.execute(`BEGIN 
+            const verificarUser = await conn.execute(`SELECT usuario FROM USUARIOS WHERE usuario='${user}'`);
+            const verificarEmail=await conn.execute(`SELECT email FROM USUARIOS WHERE email='${email}'`);
+            
+            if(verificarUser.rows[0]!=undefined){//verifica que no exista el usuario en la BD.
+
+                return {user: "Exist"};
+
+            }else if(verificarEmail.rows[0]!=undefined){//verifica que no exista el email en la BD.
+
+                return {email : "Exist"};
+
+            }else{ //si ninguno de los 2 existe entonces procede a registrar en usuario en la BD.
+
+                const hashedPassword = await new Promise((resolve, reject) => {//encriptación de la contraseña por medio de Salted Hashing.
+
+                    bcrypt.hash(password, 10, function (err: any, hash: any) {
+                        if (err) reject(err)
+                        resolve(hash)
+                    });
+                });
+
+                const result = await conn.execute(`BEGIN 
                                                 insertUSER('${primerNombre}','${apellido}','${email}','${user}','${hashedPassword}'); 
                                               END;`);
-            return "Registro Exitoso!";
+                return { mensaje: "Registro Exitoso!" };
+            }
+
 
         } catch (err) {
-            return (err + "Error al guardar en la base de datos");
+            return (err + "Error al guardar en la base de datos");//Hubo un error al insertar la información en la BD.
         } finally {
 
-            if (conn) { // conn assignment worked, need to close
+            if (conn) { // Todo salio bien, así que se procede a cerrar la conexión.
                 await conn.close();
             }
         }
