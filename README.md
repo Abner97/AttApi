@@ -40,8 +40,7 @@ apiattsmc.eastus.cloudapp.azure.com:3000/autenticar
 | password |   12345678  |
 
 
-
-
+![Respuesta del endpoint](https://i.ibb.co/QkBCpWj/token.png)
 
 
 
