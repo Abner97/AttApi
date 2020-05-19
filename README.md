@@ -34,8 +34,10 @@ apiattsmc.eastus.cloudapp.azure.com:3000/resgistro
 
 ## Autenticar Usuarios
 apiattsmc.eastus.cloudapp.azure.com:3000/autenticar
-user  
-password
+| Key      |   Value     |
+|----------|-------------|
+| user     |   jdoe97    |
+| lastName |   12345678  |
 
 
 
