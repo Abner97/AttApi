@@ -63,7 +63,7 @@ apiattsmc.eastus.cloudapp.azure.com:3000/autenticar
 
 # Endpoints para consultar la BD.
 
-## Para acceder se debe poner en el Header de la petición
+## Para acceder se debe poner en el Header de la petición:
 
 | Key      |   Value     |
 |----------|-------------|
