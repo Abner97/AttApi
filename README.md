@@ -1,35 +1,10 @@
 # AttApi
 Api del Sistema de Conciliaciones
 
-## Portabilidad_gral
-
-apiattsmc.eastus.cloudapp.azure.com:3000/portabilidad_gral
-
-## Portabilidad_origen_out
-
-apiattsmc.eastus.cloudapp.azure.com:3000/portabilidad_origen_out
-
-## Portabilidad_lineal_out
-
-apiattsmc.eastus.cloudapp.azure.com:3000/portabilidad_lineal_origen_out
-
-## Portabilidad_operador_out
-
-apiattsmc.eastus.cloudapp.azure.com:3000/portabilidad_operador_out
-
-## Portabilidad_operador_in
-apiattsmc.eastus.cloudapp.azure.com:3000/portabilidad_operador_in
-
-## Si se intenta acceder a uno de estos endpoints sin el token los endpoints devuelven:
-```json
-{
-    "mensaje": "Token no proveída."
-}
-```
-
 ## Registro
 apiattsmc.eastus.cloudapp.azure.com:3000/resgistro
 
+### En el Body de la peticion se debe poner:
 | Key      |   Value     |
 |----------|-------------|
 | name     |   John      |
@@ -60,8 +35,10 @@ apiattsmc.eastus.cloudapp.azure.com:3000/resgistro
 ```
 
 
-## Autenticar Usuarios
+## Autenticar Usuarios 
 apiattsmc.eastus.cloudapp.azure.com:3000/autenticar
+
+### En el Body de la petición se debe poner:
 | Key      |   Value     |
 |----------|-------------|
 | user     |   jdoe97    |
@@ -84,8 +61,39 @@ apiattsmc.eastus.cloudapp.azure.com:3000/autenticar
 }
 ```
 
+# Endpoints para consultar la BD.
+
+## Para acceder se debe poner en el Header de la petición
+
+| Key      |   Value     |
+|----------|-------------|
+| access-token     |  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGVjayI6dHJ1ZSwiaWF0IjoxNTg5ODQ3ODA3LCJleHAiOjE1ODk4NDkyNDd9.RAMfrTBFKc-PaJwBShcWNm0ghHu6RYOsVzsSCdQPGpM     |
+
+## Si se intenta acceder a uno de estos endpoints sin el token, los endpoints devuelven:
+```json
+{
+    "mensaje": "Token no proveída."
+}
+```
 
 
+## Portabilidad_gral
 
+apiattsmc.eastus.cloudapp.azure.com:3000/portabilidad_gral
+
+## Portabilidad_origen_out
+
+apiattsmc.eastus.cloudapp.azure.com:3000/portabilidad_origen_out
+
+## Portabilidad_lineal_out
+
+apiattsmc.eastus.cloudapp.azure.com:3000/portabilidad_lineal_origen_out
+
+## Portabilidad_operador_out
+
+apiattsmc.eastus.cloudapp.azure.com:3000/portabilidad_operador_out
+
+## Portabilidad_operador_in
+apiattsmc.eastus.cloudapp.azure.com:3000/portabilidad_operador_in
 
 
