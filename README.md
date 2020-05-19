@@ -39,8 +39,12 @@ apiattsmc.eastus.cloudapp.azure.com:3000/autenticar
 | user     |   jdoe97    |
 | password |   12345678  |
 
-
-![Respuesta del endpoint](https://i.ibb.co/QkBCpWj/token.png)
+```javascript
+{
+    "mensaje": "Autenticación correcta",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGVjayI6dHJ1ZSwiaWF0IjoxNTg5ODQ3ODA3LCJleHAiOjE1ODk4NDkyNDd9.RAMfrTBFKc-PaJwBShcWNm0ghHu6RYOsVzsSCdQPGpM"
+}
+```
 
 
 
