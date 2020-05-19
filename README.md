@@ -29,7 +29,7 @@ apiattsmc.eastus.cloudapp.azure.com:3000/resgistro
 | lastName | <apellido>  |
 | email    | <correo>    |
 | user     | <usuario>   |
-| password | <contrseña> |
+| password | <contraseña> |
 
 
 ## Autenticar Usuarios
