@@ -37,7 +37,11 @@ apiattsmc.eastus.cloudapp.azure.com:3000/autenticar
 | Key      |   Value     |
 |----------|-------------|
 | user     |   jdoe97    |
-| lastName |   12345678  |
+| password |   12345678  |
+
+
+
+
 
 
 
