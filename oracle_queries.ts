@@ -24,14 +24,14 @@ export class queries {
                     "SELECT TRUNC(A.FECHA_PROCESO) FECHA_PROCESO, NVL(B.INCONSISTENCIAS, 0) PORT_OUT, NVL(C.INCONSISTENCIAS,0) PORT_IN " +
                     "FROM" +
                     "(SELECT DISTINCT FECHA_PROCESO FROM BITACORA_CONCIL a " +
-                    "WHERE A.ID_SUBESCENARIO IN (4, 5) AND TRUNC(FECHA_PROCESO) >= TRUNC(SYSDATE-90)) A " +
+                    "WHERE A.ID_SUBESCENARIO IN (4, 5) AND TRUNC(FECHA_PROCESO) >= TRUNC(SYSDATE-120)) A " +
                     "LEFT OUTER JOIN (SELECT * FROM BITACORA_CONCIL a " +
                     "WHERE A.ID_SUBESCENARIO IN 4 " +
-                    "AND TRUNC(FECHA_PROCESO) >= TRUNC(SYSDATE-90)ORDER BY FECHA_PROCESO ASC) B " +
+                    "AND TRUNC(FECHA_PROCESO) >= TRUNC(SYSDATE-120)ORDER BY FECHA_PROCESO ASC) B " +
                     "ON A.FECHA_PROCESO = B.FECHA_PROCESO " +
                     "LEFT OUTER JOIN (SELECT * FROM BITACORA_CONCIL a " +
                     "WHERE A.ID_SUBESCENARIO IN 5 " +
-                    "AND TRUNC(FECHA_PROCESO) >= TRUNC(SYSDATE-90)ORDER BY FECHA_PROCESO ASC) C " +
+                    "AND TRUNC(FECHA_PROCESO) >= TRUNC(SYSDATE-120)ORDER BY FECHA_PROCESO ASC) C " +
                     "ON A.FECHA_PROCESO = C.FECHA_PROCESO" +
                     ") " +
                     "GROUP BY FECHA_PROCESO " +
@@ -59,22 +59,22 @@ export class queries {
                     "NVL(D.INCONSISTENCIAS,0) OTROS, NVL(E.INCONSISTENCIAS,0) PORTIN " +
                     "FROM" +
                     "(SELECT DISTINCT FECHA_PROCESO FROM BITACORA_CONCIL a " +
-                    "WHERE A.ID_SUBESCENARIO IN (1,2,3,5) AND TRUNC(FECHA_PROCESO) >= TRUNC(SYSDATE-90)) A " +
+                    "WHERE A.ID_SUBESCENARIO IN (1,2,3,5) AND TRUNC(FECHA_PROCESO) >= TRUNC(SYSDATE-120)) A " +
                     "LEFT OUTER JOIN (SELECT * FROM BITACORA_CONCIL a " +
                     "WHERE A.ID_SUBESCENARIO = 1 " +
-                    "AND TRUNC(FECHA_PROCESO) >= TRUNC(SYSDATE-90)ORDER BY FECHA_PROCESO ASC) B " +
+                    "AND TRUNC(FECHA_PROCESO) >= TRUNC(SYSDATE-120)ORDER BY FECHA_PROCESO ASC) B " +
                     "ON A.FECHA_PROCESO = B.FECHA_PROCESO " +
                     "LEFT OUTER JOIN (SELECT * FROM BITACORA_CONCIL a " +
                     "WHERE A.ID_SUBESCENARIO = 2 " +
-                    "AND TRUNC(FECHA_PROCESO) >= TRUNC(SYSDATE-90)ORDER BY FECHA_PROCESO ASC) C " +
+                    "AND TRUNC(FECHA_PROCESO) >= TRUNC(SYSDATE-120)ORDER BY FECHA_PROCESO ASC) C " +
                     "ON A.FECHA_PROCESO = C.FECHA_PROCESO " +
                     "LEFT OUTER JOIN (SELECT * FROM BITACORA_CONCIL a " +
                     "WHERE A.ID_SUBESCENARIO = 3 " +
-                    "AND TRUNC(FECHA_PROCESO) >= TRUNC(SYSDATE-90)ORDER BY FECHA_PROCESO ASC) D " +
+                    "AND TRUNC(FECHA_PROCESO) >= TRUNC(SYSDATE-120)ORDER BY FECHA_PROCESO ASC) D " +
                     "ON A.FECHA_PROCESO = D.FECHA_PROCESO " +
                     "LEFT OUTER JOIN (SELECT * FROM BITACORA_CONCIL a " +
                     "WHERE A.ID_SUBESCENARIO = 5 " +
-                    "AND TRUNC(FECHA_PROCESO) >= TRUNC(SYSDATE-90)ORDER BY FECHA_PROCESO ASC) E " +
+                    "AND TRUNC(FECHA_PROCESO) >= TRUNC(SYSDATE-120)ORDER BY FECHA_PROCESO ASC) E " +
                     "ON A.FECHA_PROCESO = E.FECHA_PROCESO " +
                     ") " +
                     "GROUP BY FECHA_PROCESO " +
@@ -110,6 +110,7 @@ export class queries {
                     "WHERE ID_SUBESCENARIO IN (9,10,11)) B " +
                     "on A.FECHA_PROCESO = B.FECHA_PROCESO)"
                 break;
+               
 
             case "portabilidad_operador_in":
                 query = "select A.* from (" +
@@ -195,7 +196,7 @@ export class queries {
 
         try {
 
-            let proceed=false;
+           
             conn = await oracl.getConnection(this.config);
             const verificarUser = await conn.execute(`SELECT usuario FROM USUARIOS WHERE usuario='${user}'`);
             const verificarEmail=await conn.execute(`SELECT email FROM USUARIOS WHERE email='${email}'`);

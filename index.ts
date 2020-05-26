@@ -102,7 +102,7 @@ app.post('/autenticar', (req: any, res: any) => {//endpoint para autenticar al u
                 check: true
             };
             const token = jwt.sign(payload, app.get('llave'), {
-                expiresIn: 1440
+                expiresIn: 3600
             });
             res.json({
                 mensaje: 'Autenticación correcta',
@@ -120,7 +120,7 @@ app.post('/autenticar', (req: any, res: any) => {//endpoint para autenticar al u
    
 });
 
-app.post('/registrar',(req:any,res:any)=>{//endpoint para registrar al usuario
+app.post('/registrar',rutasProtegidas,(req:any,res:any)=>{//endpoint para registrar al usuario
     (async () => {
         res.json(await q.Registrar(req.body.name,req.body.lastName,req.body.email, req.body.user, req.body.password));
     })()

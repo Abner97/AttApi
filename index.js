@@ -90,7 +90,7 @@ app.post('/autenticar', (req, res) => {
                     check: true
                 };
                 const token = jwt.sign(payload, app.get('llave'), {
-                    expiresIn: 1440
+                    expiresIn: 3600
                 });
                 res.json({
                     mensaje: 'Autenticación correcta',
@@ -106,7 +106,7 @@ app.post('/autenticar', (req, res) => {
         }
     }))();
 });
-app.post('/registrar', (req, res) => {
+app.post('/registrar', rutasProtegidas, (req, res) => {
     (() => __awaiter(void 0, void 0, void 0, function* () {
         res.json(yield q.Registrar(req.body.name, req.body.lastName, req.body.email, req.body.user, req.body.password));
     }))();
