@@ -62,11 +62,11 @@ class queries {
                         `WHERE A.ID_SUBESCENARIO IN (1,2,3,5) AND TRUNC(FECHA_PROCESO) >= TRUNC(SYSDATE-${SYSDATE})) A ` +
                         "LEFT OUTER JOIN (SELECT * FROM BITACORA_CONCIL a " +
                         "WHERE A.ID_SUBESCENARIO = 1 " +
-                        "AND TRUNC(FECHA_PROCESO) >= TRUNC(SYSDATE-120)ORDER BY FECHA_PROCESO ASC) B " +
+                        `AND TRUNC(FECHA_PROCESO) >= TRUNC(SYSDATE-${SYSDATE})ORDER BY FECHA_PROCESO ASC) B ` +
                         "ON A.FECHA_PROCESO = B.FECHA_PROCESO " +
                         "LEFT OUTER JOIN (SELECT * FROM BITACORA_CONCIL a " +
                         "WHERE A.ID_SUBESCENARIO = 2 " +
-                        "AND TRUNC(FECHA_PROCESO) >= TRUNC(SYSDATE-120)ORDER BY FECHA_PROCESO ASC) C " +
+                        `AND TRUNC(FECHA_PROCESO) >= TRUNC(SYSDATE-${SYSDATE})ORDER BY FECHA_PROCESO ASC) C ` +
                         "ON A.FECHA_PROCESO = C.FECHA_PROCESO " +
                         "LEFT OUTER JOIN (SELECT * FROM BITACORA_CONCIL a " +
                         "WHERE A.ID_SUBESCENARIO = 3 " +
