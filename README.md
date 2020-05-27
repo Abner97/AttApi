@@ -2,7 +2,7 @@
 Api del Sistema de Conciliaciones
 
 ## Registro
-apiattsmc.eastus.cloudapp.azure.com:3000/resgistro
+apiattsmc.eastus.cloudapp.azure.com:3000/registro
 
 ### En el Body de la peticion se debe poner:
 | Key      |   Value     |
@@ -81,6 +81,13 @@ apiattsmc.eastus.cloudapp.azure.com:3000/autenticar
 
 apiattsmc.eastus.cloudapp.azure.com:3000/portabilidad_gral
 
+### Body
+| Key      |   Value     |
+|----------|-------------|
+| sysdate  |     120     |
+
+
+
 ## Portabilidad_origen_out
 
 apiattsmc.eastus.cloudapp.azure.com:3000/portabilidad_origen_out
@@ -88,6 +95,11 @@ apiattsmc.eastus.cloudapp.azure.com:3000/portabilidad_origen_out
 ## Portabilidad_lineal_out
 
 apiattsmc.eastus.cloudapp.azure.com:3000/portabilidad_lineal_origen_out
+
+### Body
+| Key      |   Value     |
+|----------|-------------|
+| sysdate  |     120     |  
 
 ## Portabilidad_operador_out
 
