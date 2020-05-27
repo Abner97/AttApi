@@ -1,6 +1,3 @@
-import { resolve } from "path";
-import { rejects } from "assert";
-
 const oracl = require('oracledb');
 const bcrypt = require('bcrypt');
 
