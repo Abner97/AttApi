@@ -45,9 +45,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.set('llave', llave.llave);
 let datos = {};
-app.get('/portabilidad_gral', rutasProtegidas, (req, res) => {
+app.get('/portabilidad_gral/:sysdate', rutasProtegidas, (req, res) => {
     (() => __awaiter(void 0, void 0, void 0, function* () {
-        res.send(yield q.query("portabilidad_gral", null, null, null, null, null, req.body.sysdate));
+        res.send(yield q.query("portabilidad_gral", null, null, null, null, null, req.params.sysdate));
     }))();
 });
 app.get('/portabilidad_origen_out', rutasProtegidas, (req, res) => {
@@ -55,9 +55,9 @@ app.get('/portabilidad_origen_out', rutasProtegidas, (req, res) => {
         res.send(yield q.query("portabilidad_origen_out"));
     }))();
 });
-app.get('/portabilidad_lineal_origen_out', rutasProtegidas, (req, res) => {
+app.get('/portabilidad_lineal_origen_out/:sysdate', rutasProtegidas, (req, res) => {
     (() => __awaiter(void 0, void 0, void 0, function* () {
-        res.send(yield q.query("portabilidad_lineal_origen_out", null, null, null, null, null, req.body.sysdate));
+        res.send(yield q.query("portabilidad_lineal_origen_out", null, null, null, null, null, req.params.sysdate));
     }))();
 });
 app.get('/portabilidad_operador_out', rutasProtegidas, (req, res) => {

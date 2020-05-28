@@ -43,9 +43,9 @@ app.set('llave',llave.llave);
 
 let datos: any = {};
 
-app.get('/portabilidad_gral',rutasProtegidas, (req: any, res: any) => { //endpoint para portabilidad general
+app.get('/portabilidad_gral/:sysdate',rutasProtegidas, (req: any, res: any) => { //endpoint para portabilidad general
     (async () => {
-        res.send(await q.query("portabilidad_gral",null,null,null,null,null,req.body.sysdate));
+        res.send(await q.query("portabilidad_gral",null,null,null,null,null,req.params.sysdate));
     })()
 });
 
@@ -55,9 +55,9 @@ app.get('/portabilidad_origen_out',rutasProtegidas, (req: any, res: any) => { //
     })()
 });
 
-app.get('/portabilidad_lineal_origen_out',rutasProtegidas, (req: any, res: any) => {
+app.get('/portabilidad_lineal_origen_out/:sysdate',rutasProtegidas, (req: any, res: any) => {
     (async () => {
-        res.send(await q.query("portabilidad_lineal_origen_out",null,null,null,null,null,req.body.sysdate));
+        res.send(await q.query("portabilidad_lineal_origen_out",null,null,null,null,null,req.params.sysdate));
     })()
 });
 
