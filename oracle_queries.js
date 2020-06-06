@@ -20,6 +20,17 @@ class queries {
         return __awaiter(this, void 0, void 0, function* () {
             let conn;
             let query = "";
+            let date = new Date();
+            let day = date.getDate();
+            let month = date.getMonth() + 1;
+            let year = date.getFullYear();
+            let FormatedDate;
+            if (month < 10) {
+                FormatedDate = (`${day}-0${month}-${year}`);
+            }
+            else {
+                FormatedDate = (`${day}-${month}-${year}`);
+            }
             switch (nconsulta) {
                 case "portabilidad_gral":
                     query = "SELECT FECHA_PROCESO,SUM(PORT_OUT) PORT_OUT,SUM(PORT_IN) PORT_IN FROM (" +
@@ -89,7 +100,8 @@ class queries {
                         "A.ID_SUBESCENARIO, A.INCONSISTENCIAS," +
                         "ROUND(( A.INCONSISTENCIAS * 100) /  (SELECT INCONSISTENCIAS FROM BITACORA_CONCIL " +
                         " WHERE ID_SUBESCENARIO = 300 " +
-                        "AND TRUNC(FECHA_PROCESO) = TO_DATE('25/02/2020','DD/MM/YYYY')),1) PORCENTAJE," +
+                        `AND TRUNC(FECHA_PROCESO) = TO_DATE('25/02/2020','DD/MM/YYYY')),1) PORCENTAJE,` + //fecha estática para pruebas, borrar o comentar cuando el sistema este con datos actuales
+                        //`AND TRUNC(FECHA_PROCESO) = TO_DATE(${FormatedDate},'DD/MM/YYYY')),1) PORCENTAJE,` + Descomentar cuando el sistema este con datos actuales (fecha al día de hoy)
                         "A.FECHA_PROCESO " +
                         "FROM BITACORA_CONCIL a " +
                         "inner join CAT_SUBESCENARIO_BIT b " +
@@ -118,7 +130,8 @@ class queries {
                         "A.ID_SUBESCENARIO, A.INCONSISTENCIAS," +
                         "ROUND(( A.INCONSISTENCIAS * 100) /  (SELECT INCONSISTENCIAS FROM BITACORA_CONCIL " +
                         "WHERE ID_SUBESCENARIO = 5 " +
-                        "AND TRUNC(FECHA_PROCESO) = TO_DATE('11/03/2020','DD/MM/YYYY')),1) PORCENTAJE," +
+                        "AND TRUNC(FECHA_PROCESO) = TO_DATE('25/02/2020','DD/MM/YYYY')),1) PORCENTAJE," + //fecha estática para pruebas, borrar o comentar cuando el sistema este con datos actuales
+                        //`AND TRUNC(FECHA_PROCESO) = TO_DATE(${FormatedDate},'DD/MM/YYYY')),1) PORCENTAJE,` +  Descomentar cuando el sistema este con datos actuales (fecha al día de hoy)
                         "A.FECHA_PROCESO " +
                         "FROM BITACORA_CONCIL a " +
                         "inner join CAT_SUBESCENARIO_BIT b " +

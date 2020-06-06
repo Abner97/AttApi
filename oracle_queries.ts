@@ -11,9 +11,20 @@ export class queries {
 
     }
 
-    async query(nconsulta: string, nombre: string | null = "", lastName: string | null = "", email: string | null = "", usuario: string | null = "", contrasena: string | null = "",SYSDATE: number | null = 0): Promise<string> { //resuelve las queries para cada caso
+    async query(nconsulta: string, nombre: string | null = "", lastName: string | null = "", email: string | null = "", usuario: string | null = "", contrasena: string | null = "", SYSDATE: number | null = 0): Promise<string> { //resuelve las queries para cada caso
         let conn: any;
         let query: string = "";
+        let date = new Date()
+
+        let day = date.getDate()
+        let month = date.getMonth() + 1
+        let year = date.getFullYear()
+        let FormatedDate:string;
+        if (month < 10) {
+             FormatedDate=(`${day}-0${month}-${year}`)
+        } else {
+             FormatedDate=(`${day}-${month}-${year}`)
+        }
 
         switch (nconsulta) {
             case "portabilidad_gral":
@@ -87,7 +98,8 @@ export class queries {
                     "A.ID_SUBESCENARIO, A.INCONSISTENCIAS," +
                     "ROUND(( A.INCONSISTENCIAS * 100) /  (SELECT INCONSISTENCIAS FROM BITACORA_CONCIL " +
                     " WHERE ID_SUBESCENARIO = 300 " +
-                    "AND TRUNC(FECHA_PROCESO) = TO_DATE('25/02/2020','DD/MM/YYYY')),1) PORCENTAJE," +
+                    `AND TRUNC(FECHA_PROCESO) = TO_DATE('25/02/2020','DD/MM/YYYY')),1) PORCENTAJE,` + //fecha estática para pruebas, borrar o comentar cuando el sistema este con datos actuales
+                    //`AND TRUNC(FECHA_PROCESO) = TO_DATE(${FormatedDate},'DD/MM/YYYY')),1) PORCENTAJE,` + Descomentar cuando el sistema este con datos actuales (fecha al día de hoy)
                     "A.FECHA_PROCESO " +
                     "FROM BITACORA_CONCIL a " +
                     "inner join CAT_SUBESCENARIO_BIT b " +
@@ -107,7 +119,7 @@ export class queries {
                     "WHERE ID_SUBESCENARIO IN (9,10,11)) B " +
                     "on A.FECHA_PROCESO = B.FECHA_PROCESO)"
                 break;
-               
+
 
             case "portabilidad_operador_in":
                 query = "select A.* from (" +
@@ -118,7 +130,8 @@ export class queries {
                     "A.ID_SUBESCENARIO, A.INCONSISTENCIAS," +
                     "ROUND(( A.INCONSISTENCIAS * 100) /  (SELECT INCONSISTENCIAS FROM BITACORA_CONCIL " +
                     "WHERE ID_SUBESCENARIO = 5 " +
-                    "AND TRUNC(FECHA_PROCESO) = TO_DATE('11/03/2020','DD/MM/YYYY')),1) PORCENTAJE," +
+                    "AND TRUNC(FECHA_PROCESO) = TO_DATE('25/02/2020','DD/MM/YYYY')),1) PORCENTAJE," + //fecha estática para pruebas, borrar o comentar cuando el sistema este con datos actuales
+                    //`AND TRUNC(FECHA_PROCESO) = TO_DATE(${FormatedDate},'DD/MM/YYYY')),1) PORCENTAJE,` +  Descomentar cuando el sistema este con datos actuales (fecha al día de hoy)
                     "A.FECHA_PROCESO " +
                     "FROM BITACORA_CONCIL a " +
                     "inner join CAT_SUBESCENARIO_BIT b " +
@@ -188,25 +201,25 @@ export class queries {
     }
 
     async Registrar(primerNombre: string, apellido: string, email: string, user: string, password: string) {
-        
+
         let conn: any;
 
         try {
 
-           
+
             conn = await oracl.getConnection(this.config);
             const verificarUser = await conn.execute(`SELECT usuario FROM USUARIOS WHERE usuario='${user}'`);
-            const verificarEmail=await conn.execute(`SELECT email FROM USUARIOS WHERE email='${email}'`);
-            
-            if(verificarUser.rows[0]!=undefined){//verifica que no exista el usuario en la BD.
+            const verificarEmail = await conn.execute(`SELECT email FROM USUARIOS WHERE email='${email}'`);
 
-                return {user: "Exist"};
+            if (verificarUser.rows[0] != undefined) {//verifica que no exista el usuario en la BD.
 
-            }else if(verificarEmail.rows[0]!=undefined){//verifica que no exista el email en la BD.
+                return { user: "Exist" };
 
-                return {email : "Exist"};
+            } else if (verificarEmail.rows[0] != undefined) {//verifica que no exista el email en la BD.
 
-            }else{ //si ninguno de los 2 existe entonces procede a registrar en usuario en la BD.
+                return { email: "Exist" };
+
+            } else { //si ninguno de los 2 existe entonces procede a registrar en usuario en la BD.
 
                 const hashedPassword = await new Promise((resolve, reject) => {//encriptación de la contraseña por medio de Salted Hashing.
 
