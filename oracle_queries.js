@@ -100,8 +100,7 @@ class queries {
                         "A.ID_SUBESCENARIO, A.INCONSISTENCIAS," +
                         "ROUND(( A.INCONSISTENCIAS * 100) /  (SELECT INCONSISTENCIAS FROM BITACORA_CONCIL " +
                         " WHERE ID_SUBESCENARIO = 300 " +
-                        `AND TRUNC(FECHA_PROCESO) = TO_DATE('22/02/2020','DD/MM/YYYY')),1) PORCENTAJE,` +
-                        "A.FECHA_PROCESO " +
+                        "AND TRUNC(FECHA_PROCESO) = TO_DATE('22/02/2020','DD/MM/YYYY')),1) PORCENTAJE," +
                         "A.FECHA_PROCESO " +
                         "FROM BITACORA_CONCIL a " +
                         "inner join CAT_SUBESCENARIO_BIT b " +
