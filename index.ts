@@ -11,7 +11,14 @@ const corsOptions = {
     origin: 'http://localhost:4200',
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
   }
-app.use(cors(corsOptions));
+
+
+  app.use(function(req:any, res:any, next:any) {
+    res.header("Access-Control-Allow-Origin", "http://localhost:4200"); // update to match the domain you will make the request from
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+  });
+
 
 
 const rutasProtegidas = express.Router(); //middleware 
