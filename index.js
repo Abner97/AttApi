@@ -110,6 +110,8 @@ app.post('/autenticar', cors(corsOptions), (req, res) => {
             else {
                 res.json({ mensaje: "Usuario o contraseña incorrectos" });
             }
+            res.header("Access-Control-Allow-Origin", "http://localhost:4200"); // update to match the domain you will make the request from
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
         }
         catch (err) {
             res.json({ mensaje: "Usuario o contraseña incorrectos" });
