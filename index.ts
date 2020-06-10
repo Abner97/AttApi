@@ -13,15 +13,15 @@ const corsOptions = {
 }
 app.use(cors());
 
-app.all('*', function (req:any, res:any, next:any) {
-    res.header('Access-Control-Allow-Origin', 'https://attsmc.herokuapp.com');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
-    if ('OPTIONS' == req.method) {
-        res.sendStatus(200);
-    } else {
-        next();
-    }
+app.use(function (req:any, res:any, next:any) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header("Access-Control-Allow-Headers",
+    "Origin,X-Requested-With,Content-Type,Accept,Authorization"
+    );
+    if (req.method == 'OPTIONS') {
+        res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+        return res.status(200).json({});
+    } 
 });
 
 
