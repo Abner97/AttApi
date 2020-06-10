@@ -14,7 +14,7 @@ const corsOptions = {
 app.use(cors());
 
 app.all('*', function (req:any, res:any, next:any) {
-    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Origin', 'https://attsmc.herokuapp.com');
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
     if ('OPTIONS' == req.method) {
