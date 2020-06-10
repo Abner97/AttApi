@@ -20,9 +20,11 @@ const corsOptions = {
     origin: 'http://localhost:4200',
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
-app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "http://localhost:4200"); // update to match the domain you will make the request from
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+    res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
     next();
 });
 const rutasProtegidas = express.Router(); //middleware 
@@ -110,8 +112,6 @@ app.post('/autenticar', cors(corsOptions), (req, res) => {
             else {
                 res.json({ mensaje: "Usuario o contraseña incorrectos" });
             }
-            res.header("Access-Control-Allow-Origin", "http://localhost:4200"); // update to match the domain you will make the request from
-            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
         }
         catch (err) {
             res.json({ mensaje: "Usuario o contraseña incorrectos" });

@@ -13,12 +13,13 @@ const corsOptions = {
   }
 
 
-  app.use(function(req:any, res:any, next:any) {
-    res.header("Access-Control-Allow-Origin", "http://localhost:4200"); // update to match the domain you will make the request from
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  app.use((req:any, res:any, next:any) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+    res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
     next();
-  });
-
+});
 
 
 const rutasProtegidas = express.Router(); //middleware 
@@ -126,9 +127,7 @@ app.post('/autenticar',  cors(corsOptions),(req: any, res: any) => {//endpoint p
             res.json({ mensaje: "Usuario o contraseña incorrectos" });
         }
 
-        res.header("Access-Control-Allow-Origin", "http://localhost:4200"); // update to match the domain you will make the request from
-        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-
+       
     }catch(err){
         res.json({ mensaje: "Usuario o contraseña incorrectos" });
     }
