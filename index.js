@@ -16,19 +16,21 @@ const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 var cors = require('cors');
 const app = express();
-const corsOptions = {
-    origin: 'http://localhost:4200',
-    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-};
-app.use(cors());
-app.use(function (req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header("Access-Control-Allow-Headers", "Origin,X-Requested-With,Content-Type,Accept,Authorization");
-    if (req.method == 'OPTIONS') {
-        res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-        return res.status(200).json({});
-    }
-});
+// const corsOptions = {
+//     origin: 'http://localhost:4200',
+//     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+// }
+// app.use(cors());
+// app.use(function (req:any, res:any, next:any) {
+//     res.header('Access-Control-Allow-Origin', '*');
+//     res.header("Access-Control-Allow-Headers",
+//     "Origin,X-Requested-With,Content-Type,Accept,Authorization"
+//     );
+//     if (req.method == 'OPTIONS') {
+//         res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+//         return res.status(200).json({});
+//     } 
+// });
 const rutasProtegidas = express.Router(); //middleware 
 rutasProtegidas.use((req, res, next) => {
     const token = req.headers['access-token'];
@@ -92,7 +94,7 @@ app.get('/usuarios', rutasProtegidas, (req, res) => {
         res.send(yield q.query("usuarios", req.body.user, req.body.password));
     }))();
 });
-app.post('/autenticar', cors(corsOptions), (req, res) => {
+app.post('/autenticar', (req, res) => {
     const plainPassword = req.body.password;
     const user = req.body.user;
     (() => __awaiter(void 0, void 0, void 0, function* () {

@@ -7,22 +7,22 @@ const jwt = require('jsonwebtoken');
 var cors = require('cors');
 const app = express();
 
-const corsOptions = {
-    origin: 'http://localhost:4200',
-    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-}
-app.use(cors());
+// const corsOptions = {
+//     origin: 'http://localhost:4200',
+//     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+// }
+// app.use(cors());
 
-app.use(function (req:any, res:any, next:any) {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header("Access-Control-Allow-Headers",
-    "Origin,X-Requested-With,Content-Type,Accept,Authorization"
-    );
-    if (req.method == 'OPTIONS') {
-        res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-        return res.status(200).json({});
-    } 
-});
+// app.use(function (req:any, res:any, next:any) {
+//     res.header('Access-Control-Allow-Origin', '*');
+//     res.header("Access-Control-Allow-Headers",
+//     "Origin,X-Requested-With,Content-Type,Accept,Authorization"
+//     );
+//     if (req.method == 'OPTIONS') {
+//         res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+//         return res.status(200).json({});
+//     } 
+// });
 
 
 const rutasProtegidas = express.Router(); //middleware 
@@ -104,7 +104,7 @@ app.get('/usuarios', rutasProtegidas, (req: any, res: any) => {
 
 
 
-app.post('/autenticar', cors(corsOptions), (req: any, res: any) => {//endpoint para autenticar al usuario
+app.post('/autenticar',(req: any, res: any) => {//endpoint para autenticar al usuario
 
     const plainPassword = req.body.password;
     const user = req.body.user;
