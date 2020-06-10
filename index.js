@@ -80,7 +80,7 @@ app.get('/usuarios', rutasProtegidas, (req, res) => {
         res.send(yield q.query("usuarios", req.body.user, req.body.password));
     }))();
 });
-app.post('/autenticar', (req, res) => {
+app.post('/autenticar', cors(), (req, res) => {
     const plainPassword = req.body.password;
     const user = req.body.user;
     (() => __awaiter(void 0, void 0, void 0, function* () {

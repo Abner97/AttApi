@@ -89,7 +89,7 @@ app.get('/usuarios',rutasProtegidas, (req: any, res: any) => {
 
 
 
-app.post('/autenticar', (req: any, res: any) => {//endpoint para autenticar al usuario
+app.post('/autenticar',  cors(),(req: any, res: any) => {//endpoint para autenticar al usuario
 
     const plainPassword=req.body.password;
     const user = req.body.user;
