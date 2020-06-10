@@ -4,7 +4,10 @@ const llave = require('./configs/config');
 const express = require('express');
 const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
+var cors = require('cors');
 const app = express();
+
+app.use(cors());
 
 
 const rutasProtegidas = express.Router(); //middleware 
