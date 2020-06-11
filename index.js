@@ -1,4 +1,12 @@
 "use strict";
+/**
+* Este script se encarga de crear los endpoints de la API, el servidor, generar el token jwt, y validar credenciales de usuario.
+*
+*
+*
+* @author Abraham Vega
+* @date 10-06-2020
+*/
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -11,27 +19,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const oracle_queries_1 = require("./oracle_queries");
 const llave = require('./configs/config');
-const express = require('express');
+const express = require('express'); //Express-js
 const bodyParser = require('body-parser');
-const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken'); //JWT
 var cors = require('cors');
 const app = express();
-// const corsOptions = {
-//     origin: 'http://localhost:4200',
-//     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-// }
+//Cross-origin resource sharing (si no se usa el navegador bloquea la respuesta http de la API)
 app.use(cors());
-// app.use(function (req:any, res:any, next:any) {
-//     res.header('Access-Control-Allow-Origin', '*');
-//     res.header("Access-Control-Allow-Headers",
-//     "Origin,X-Requested-With,Content-Type,Accept,Authorization"
-//     );
-//     if (req.method == 'OPTIONS') {
-//         res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-//         return res.status(200).json({});
-//     } 
-// });
-const rutasProtegidas = express.Router(); //middleware 
+const rutasProtegidas = express.Router();
+/**
+*Esta función es la que valida el token jwt cada vez que se hace una petición.(Middleware)
+*
+*/
 rutasProtegidas.use((req, res, next) => {
     const token = req.headers['access-token'];
     if (token) {
@@ -90,7 +89,6 @@ app.get('/usuarios', rutasProtegidas, (req, res) => {
     console.log(req.body.user);
     (() => __awaiter(void 0, void 0, void 0, function* () {
         datos = yield q.query("usuarios", req.body.user, req.body.password);
-        //console.log(datos);
         res.send(yield q.query("usuarios", req.body.user, req.body.password));
     }))();
 });
@@ -101,12 +99,12 @@ app.post('/autenticar', (req, res) => {
         try {
             datos = yield q.query("autenticar", null, null, null, user, null);
             const passwordValidated = yield q.validarPassword(plainPassword, datos[0].PASS);
-            if (user === datos[0].USUARIO && passwordValidated) {
+            if (user === datos[0].USUARIO && passwordValidated) { //si las credenciales son correctas se genera el token.
                 const payload = {
                     check: true
                 };
                 const token = jwt.sign(payload, app.get('llave'), {
-                    expiresIn: 3600
+                    expiresIn: 28800 //el token expira en 8 horas (una jornada laboral)
                 });
                 res.json({
                     mensaje: 'Autenticación correcta',
@@ -127,6 +125,6 @@ app.post('/registrar', rutasProtegidas, (req, res) => {
         res.json(yield q.Registrar(req.body.name, req.body.lastName, req.body.email, req.body.user, req.body.password));
     }))();
 });
-//PORT
+//Creación del servidor
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}`));

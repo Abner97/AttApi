@@ -1,4 +1,12 @@
 "use strict";
+/**
+* Este clase es la que se encarga de hacer las consultas a la BD ORACLE
+*
+*
+*
+* @author Abraham Vega
+* @date 10-06-2020
+*/
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -9,13 +17,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const oracl = require('oracledb');
-const bcrypt = require('bcrypt');
+const oracl = require('oracledb'); //libreria para consultar la base de datos Oracle con Node.js (libreria oficial de Oracle).
+const bcrypt = require('bcrypt'); //libreria para encriptar las contraseñas con salt hashing.
+//se le dice al objeto oracl que genere una salida tipo JSON para que los datos sean más fáciles de manejar del lado del Frontend.
 oracl.outFormat = oracl.OUT_FORMAT_OBJECT;
 class queries {
     constructor(config) {
         this.config = config;
     }
+    /**
+   * Esta función recibe el tipo de consulta que se desea hacer y ejecuta el query especifico de dicha consulta.
+   * @param nconsulta - nombre de la consulta.
+   * @param nombre - nombre real del usuario
+   * @param lastName - apellido del usuario
+   * @param email - correo del usuario
+   * @param usuario - nombre de usuario
+   * @param contrasena - contraseña en texto plano del usuario.
+   * @param SYSDATE - cantidad de dias atras (offset) que se van a consultar.
+   */
     query(nconsulta, nombre = "", lastName = "", email = "", usuario = "", contrasena = "", SYSDATE = 0) {
         return __awaiter(this, void 0, void 0, function* () {
             let conn;
@@ -24,7 +43,7 @@ class queries {
             let day = date.getDate();
             let month = date.getMonth() + 1;
             let year = date.getFullYear();
-            let FormatedDate;
+            let FormatedDate; //cuando los datos de la BD sean actuales usar esta variable, la cual gener la fecha al día de hoy
             if (month < 10) {
                 FormatedDate = (`${day}-0${month}-${year}`);
             }
@@ -177,6 +196,11 @@ class queries {
             }
         });
     }
+    /**
+  * Esta función compara la contraseña ingresada por el usuario con el hash que esta guardado en la BD para verificar que sea la contraseña correcta.
+  * @param password - contraseña del usuario en texto plano (ej.contraseña12345678).
+  * @param hash - hash de la contraseña guardada en la BD
+  */
     validarPassword(password, hash) {
         return __awaiter(this, void 0, void 0, function* () {
             const response = yield new Promise((resolve, reject) => {
@@ -189,6 +213,14 @@ class queries {
             return response; //Devuelve true o false, si es true la constraseña en correcta, si no es true es incorrecta
         });
     }
+    /**
+* Esta función es para registrar nuevos usuarios.
+* @param primerNombre - Nombre real del usuario
+* @param apellido - apellido del usuario
+* @param email - correo electrónico del usuario
+* @param user - nombre de usuario
+* @param password - contraseña del usuario
+*/
     Registrar(primerNombre, apellido, email, user, password) {
         return __awaiter(this, void 0, void 0, function* () {
             let conn;

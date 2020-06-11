@@ -1,6 +1,16 @@
-const oracl = require('oracledb');
-const bcrypt = require('bcrypt');
+/**
+* Este clase es la que se encarga de hacer las consultas a la BD ORACLE
+* 
+*
+*
+* @author Abraham Vega
+* @date 10-06-2020
+*/
 
+const oracl = require('oracledb');//libreria para consultar la base de datos Oracle con Node.js (libreria oficial de Oracle).
+const bcrypt = require('bcrypt');//libreria para encriptar las contraseñas con salt hashing.
+
+//se le dice al objeto oracl que genere una salida tipo JSON para que los datos sean más fáciles de manejar del lado del Frontend.
 oracl.outFormat = oracl.OUT_FORMAT_OBJECT;
 
 
@@ -11,6 +21,16 @@ export class queries {
 
     }
 
+    /**
+   * Esta función recibe el tipo de consulta que se desea hacer y ejecuta el query especifico de dicha consulta.
+   * @param nconsulta - nombre de la consulta.
+   * @param nombre - nombre real del usuario
+   * @param lastName - apellido del usuario
+   * @param email - correo del usuario
+   * @param usuario - nombre de usuario
+   * @param contrasena - contraseña en texto plano del usuario.
+   * @param SYSDATE - cantidad de dias atras (offset) que se van a consultar.
+   */
     async query(nconsulta: string, nombre: string | null = "", lastName: string | null = "", email: string | null = "", usuario: string | null = "", contrasena: string | null = "", SYSDATE: number | null = 0): Promise<string> { //resuelve las queries para cada caso
         let conn: any;
         let query: string = "";
@@ -19,7 +39,7 @@ export class queries {
         let day = date.getDate()
         let month = date.getMonth() + 1
         let year = date.getFullYear()
-        let FormatedDate:string;
+        let FormatedDate:string; //cuando los datos de la BD sean actuales usar esta variable, la cual gener la fecha al día de hoy
         if (month < 10) {
              FormatedDate=(`${day}-0${month}-${year}`)
         } else {
@@ -183,8 +203,12 @@ export class queries {
         }
     }
 
-    async validarPassword(password: string, hash: string) { //esta función valida que el Hash del password ingresado por el usuario coincida con el Hash del password del usuario que están la BD.
-
+     /**
+   * Esta función compara la contraseña ingresada por el usuario con el hash que esta guardado en la BD para verificar que sea la contraseña correcta.
+   * @param password - contraseña del usuario en texto plano (ej.contraseña12345678).
+   * @param hash - hash de la contraseña guardada en la BD 
+   */
+    async validarPassword(password: string, hash: string) { 
 
         const response = await new Promise((resolve, reject) => {
             bcrypt.compare(password, hash, function (err: any, result: any) {
@@ -200,6 +224,14 @@ export class queries {
 
     }
 
+       /**
+   * Esta función es para registrar nuevos usuarios.
+   * @param primerNombre - Nombre real del usuario
+   * @param apellido - apellido del usuario
+   * @param email - correo electrónico del usuario
+   * @param user - nombre de usuario
+   * @param password - contraseña del usuario
+   */
     async Registrar(primerNombre: string, apellido: string, email: string, user: string, password: string) {
 
         let conn: any;
